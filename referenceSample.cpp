@@ -21,13 +21,14 @@ void question3(){ // self-explanatory
     cout << "C. C++" << endl;
     cout << "D. C" << endl;
 }
-void check_answer(int quest_num, int &ctr){
+void check_answer(int &quest_num, int &ctr){
     char answer;
     cout << "\nAnswer: "; cin >> answer; 
     char answers[3] = {'A', 'B', 'C'}; 
     if(answer != answers[quest_num - 1]){ 
         ++ctr; 
     }
+    ++quest_num;
 }
 void show_result(int &correct, int &wrong, int &total){
     correct = total - wrong;
@@ -37,15 +38,16 @@ void show_result(int &correct, int &wrong, int &total){
     cout << "Total: " << total << endl;
 }
 int main(){
-    int correct = 0; 
-    int wrong = 0;     
-    int total = 3;   
+    int correct = 0, *c = &correct;
+    int wrong = 0, *w = &wrong;
+    int total = 3, *t = &total; 
+    int quest_num = 1, *q = &quest_num;
     question1(); 
-    check_answer(1, wrong); 
+    check_answer(*q, *w); 
     question2(); 
-    check_answer(2, wrong); 
+    check_answer(*q, *w); 
     question3(); 
-    check_answer(3, wrong); 
-    show_result(correct, wrong, total); 
+    check_answer(*q, *w); 
+    show_result(*c, *w, *t); 
     main();
 }
