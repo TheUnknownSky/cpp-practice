@@ -32,7 +32,7 @@ int check_answer(int quest_num){
     // answer prompt
     char answers[3] = {'A', 'B', 'C'}; 
     // array of correct answers
-    if(*a != answers[quest_num - 1]){ // checks if the answer or *a is wrong
+    if(*a != answers[quest_num - 1]){ 
         *c = 1; 
         // if the answer or *a is wrong, the ctr or *c will be equal to 1
     }
@@ -60,7 +60,8 @@ int main(){
     question1(); 
     // calls out question1 function
     *w += check_answer(1); 
-    // prompts the user to answer, and checks the answer of question 1 if it is wrong. If it is wrong, then the wrong counter or *w will be increased by 1 as the function returns the value of 1 if the answer is wrong
+    // prompts the user to answer, and checks the answer of question 1 if it is wrong
+    // if it is wrong, then the wrong counter or *w will be increased by 1 as the function returns the value of 1 if the answer is wrong
     question2(); 
     // calls out question 2 function
     *w += check_answer(2); 

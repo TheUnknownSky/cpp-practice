@@ -23,12 +23,16 @@ void question3(){ // self-explanatory
 }
 void check_answer(int &quest_num, int &ctr){
     char answer;
-    cout << "\nAnswer: "; cin >> answer; 
+    cout << "\nAnswer: "; cin >> answer;
+    // answer prompt
     char answers[3] = {'A', 'B', 'C'}; 
-    if(answer != answers[quest_num - 1]){ 
+    // array of correct answers
+    if(answer != answers[quest_num - 1]){ // checks if the answer is wrong
         ++ctr; 
+        // this directly increases the value of the variable aliased to it, which is the 'wrong' or '*w' variable
     }
     ++quest_num;
+    // this directly increases the value of the variable aliased to it, which is the 'quest_num' or '*q' variable
 }
 void show_result(int &correct, int &wrong, int &total){
     correct = total - wrong;
@@ -38,16 +42,29 @@ void show_result(int &correct, int &wrong, int &total){
     cout << "Total: " << total << endl;
 }
 int main(){
-    int correct = 0, *c = &correct;
-    int wrong = 0, *w = &wrong;
+    int correct = 0, *c = &correct; 
+    // 'correct' is the same as '*c'' and vice versa
+    int wrong = 0, *w = &wrong; 
+    // 'wrong' is the same as '*w' and vice versa
     int total = 3, *t = &total; 
+    // 'total' is the same as '*t' and vice versa
     int quest_num = 1, *q = &quest_num;
-    question1(); 
+    // 'quest_num' is the same as '*q' and vice versa
+    question1();
+    // calls out question1 function
+    check_answer(*q, *w);
+    // this function takes the value of *q and *w directly and changes it directly inside the function
+    // the value of *w increases by one (1) if the answer is wrong, while the value of *q increases by one (1) after the function is called
+    question2();
+    // calls out question2 function
     check_answer(*q, *w); 
-    question2(); 
+    // the same as the previous check_answer function
+    question3();
+    // calls out question3 function
     check_answer(*q, *w); 
-    question3(); 
-    check_answer(*q, *w); 
-    show_result(*c, *w, *t); 
+    // the same as the previous check_answer function
+    show_result(*c, *w, *t);
+    // takes the values of correct, wrong, and total variables directly to the function show_result
     main();
+    // goes back to the first line of code inside the main function, works as a loop without using while/do-while/for loops
 }
