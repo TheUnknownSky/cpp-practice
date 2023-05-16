@@ -2,20 +2,19 @@
 #include <ctime>
 #include <cstdlib>
 using namespace std;
-
 void show_array(int array[], int n){
     for(int i=0; i<n; ++i){
         cout << array[i] << " ";
     }
     cout << endl;
 }
-
 void bubble_sort(int array[], int n){
     for(int i=0; i<(n-1); ++i){
         cout << "Pass " << i+1 << ": " << endl;
         for(int j=0; j<(n-1); ++j){
             if (array[j] > array[j+1]){
                 swap(array[j], array[j+1]);
+                // int temp = array[j]; array[j] = array[j+1]; array[j+1] = temp;
             }
             show_array(array, n);
         }
@@ -24,13 +23,13 @@ void bubble_sort(int array[], int n){
     cout << "Sorted numbers: " << endl;
     show_array(array, n);
 }
-
 void selection_sort(int array[], int n){
     for(int i=0; i<(n-1); ++i){
         cout << "Pass " << i+1 << ": " << endl;
         for(int j=i+1; j<n; ++j){
             if(array[i] > array[j]){
                 swap(array[i], array[j]);
+                // int temp = array[i]; array[i] = array[j]; array[j] = temp;
             }
             show_array(array, n);
         }
@@ -39,13 +38,13 @@ void selection_sort(int array[], int n){
     cout << "Sorted numbers: " << endl;
     show_array(array, n);
 }
-
 void insertion_sort(int array[], int n){
     for(int i=1; i<n; ++i){
         cout << "Pass " << i << ": " << endl;
         for(int j=0; j<i; ++j){
             if(array[j] > array[i]){
                 swap(array[j], array[i]);
+                // int temp = array[j]; array[j] = array[i]; array[i] = temp;
             }
             show_array(array, n);
         }
@@ -54,17 +53,14 @@ void insertion_sort(int array[], int n){
     cout << "Sorted numbers: " << endl;
     show_array(array, n);
 }
-
 int give_random_number(int range, int lowest_limit){
     return rand() % range + lowest_limit;
 }
-
 void generate_numbers(int array[], int range, int lowest_limit, int n){
     for(int i=0; i<n; ++i){
         array[i] = give_random_number(range, lowest_limit);
     }
 }
-
 int main(){
     srand(time(NULL));
     bool access = true;
