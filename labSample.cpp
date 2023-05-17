@@ -57,8 +57,7 @@ void show_result(){
     cout << names[2] << ": " << scores[2] << endl;
 }
 int main(){
-    int correct = 0, *c = &correct;
-    int i = 0;
+    int correct = 0, *c = &correct, i = 0;
     string name, *n = &name;
     quiz_prompt(*n, *c, i);
     quiz_prompt(*n, *c, i);
