@@ -34,9 +34,12 @@ void check_answer(int &quest_num, int &ctr){
     ++quest_num;
     // this directly increases the value of the variable aliased to it, which is the 'quest_num' or '*q' variable
 }
-void show_result(int &correct, int &wrong, int &total){
+void calculate(int &correct, int &wrong, int &total){ // directly calculates the correct/*c and total/*t variables
     correct = total - wrong;
     total = correct;
+}
+void show_result(int &correct, int &wrong, int &total){
+    calculate(correct, wrong, total); // function that calculates the correct and total variables
     cout << "\nCorrect: " << correct << endl;
     cout << "Wrong: " << wrong << endl << endl;
     cout << "Total: " << total << endl;
