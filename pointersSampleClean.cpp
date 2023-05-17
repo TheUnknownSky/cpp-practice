@@ -28,8 +28,7 @@ int check_answer(int quest_num){
     cout << "\nAnswer: ";
     cin >> *a;
     char answers[3] = {'A', 'B', 'C'};
-    if (*a != answers[quest_num - 1])
-    {
+    if (*a != answers[quest_num - 1]){
         *c = 1;
     }
     return *c;
