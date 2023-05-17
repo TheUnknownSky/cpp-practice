@@ -43,7 +43,7 @@ void show_result(int &correct, int &wrong, int &total){
     cout << "\nCorrect: " << correct << endl;
     cout << "Wrong: " << wrong << endl << endl;
     cout << "Total: " << total << endl;
-}
+} 
 int main(){
     int correct = 0, *c = &correct; 
     // 'correct' is the same as '*c'' and vice versa
