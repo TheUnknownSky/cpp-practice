@@ -52,9 +52,9 @@ void quiz_prompt(string &name, int &correct, int &i){
 }
 void show_result(){
     cout << endl;
-    cout << names[0] << ": " << scores[0] << endl;
-    cout << names[1] << ": " << scores[1] << endl;
-    cout << names[2] << ": " << scores[2] << endl;
+    for(int i = 0; i < 3; ++i){
+        cout << names[i] << ": " << scores[i] << endl;
+    }
 }
 int main(){
     int correct = 0, *c = &correct, i = 0;
