@@ -30,25 +30,26 @@ void check_answer(int quest_num, int &correct){
     cin >> *a;
     char answers[3] = {'A', 'B', 'C'};
     if (*a == answers[quest_num - 1]){
-        correct = correct + 1;
+        ++correct;
     }
 }
 void ask_name(string &name){
     cout << "\n-----------------------------------------------------------\n" << endl;
     cout << "Enter name: "; cin >> name;
 }
-void quiz_prompt(string &name, int &correct, int &i){
-    ask_name(name);
+void quiz_prompt(int &i){
+    string name, *n = &name; 
+    int correct = 0, *c = &correct;
+    ask_name(*n);
     question1();
-    check_answer(1, correct);
+    check_answer(1, *c);
     question2();
-    check_answer(2, correct);
+    check_answer(2, *c);
     question3();
-    check_answer(3, correct);
-    names[i] = name;
-    scores[i] = correct;
+    check_answer(3, *c);
+    names[i] = *n;
+    scores[i] = *c;
     ++i;
-    correct = 0;
 }
 void show_result(){
     cout << endl;
@@ -57,10 +58,9 @@ void show_result(){
     }
 }
 int main(){
-    int correct = 0, *c = &correct, i = 0;
-    string name, *n = &name;
-    quiz_prompt(*n, *c, i);
-    quiz_prompt(*n, *c, i);
-    quiz_prompt(*n, *c, i);
+    int i = 0;
+    quiz_prompt(i);
+    quiz_prompt(i);
+    quiz_prompt(i);
     show_result();
 }   
