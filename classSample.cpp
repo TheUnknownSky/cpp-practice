@@ -14,28 +14,29 @@ class Enemy;
 Char_Class select_character();
 Character character_creation_prompt();
 Enemy enemy_creration();
+void battle_sequence();
 
 // Class Definintions
 class Templar {
     public:
         string char_class = "Templar";
         int hp = 100;
-        int attack = 10;
-        int defense = 20;
+        int attack = 15;
+        int defense = 15;
 };
 class Assassin {
     public:
         string char_class = "Assassin";
         int hp = 70;
-        int attack = 30;
-        int defense = 5;
+        int attack = 23;
+        int defense = 10;
 };
 class Barbarian {
     public:
         string char_class = "Barbarian";
         int hp = 85;
         int attack = 20;
-        int defense = 10;
+        int defense = 12;
 };
 class Character {
     private:
@@ -45,6 +46,7 @@ class Character {
         int xp;
         int xp_limit;
         int hp;
+        int max_hp;
         int attack;
         int defense;
     public:
@@ -55,12 +57,13 @@ class Character {
             xp_limit = XP_Limit;
             char_class = character_class;
             hp = Hp;
+            max_hp = Hp;
             attack = Attack;
             defense = Defense;
         }
         void show_details(){
             cout << "\n|| " << username << " || " << char_class << " || " << "Level " << level << " || " << "XP: " << xp << "/" << xp_limit << " || " <<
-            "\n|| Health: " << hp << " || " << "Attack: " << attack << " || " << "Defense: " << defense << " || " << endl << endl; 
+            "\n|| Health: " << hp << " / " << max_hp << " || " << "Attack: " << attack << " || " << "Defense: " << defense << " || " << endl; 
         }
         void add_xp(int XP){
             cout << "You got " << XP << " XP!" << endl << endl;
@@ -69,11 +72,32 @@ class Character {
                 xp = xp - xp_limit; // Revert xp
                 level += 1; // Level up
                 xp_limit = xp_limit * 1.4; // Set XP Limit
+                // stat change function over here!
             }
             show_details();
         }
+        void hp_reduce(int enemy_atk){
+            int actual_attack = (getRNG(5, enemy_atk-5)) - ((getRNG(3, 2) * 0.1) * defense);
+            cout << username << " received " << actual_attack << " damage!" << endl;
+            hp = hp - actual_attack;
+            if (hp < 0){
+                hp = 0;
+            }
+        }
         int get_user_level(){
             return level;
+        }
+        int get_user_hp(){
+            return hp;
+        }
+        int get_user_attack(){
+            return attack;
+        }
+        int get_user_defense(){
+            return defense;
+        }
+        void death(){
+            cout << username << " has been killed!" << endl;
         }
 };
 class Char_Class {
@@ -107,6 +131,7 @@ class Char_Class {
 class Enemy{
     private:
         int hp;
+        int max_hp;
         int attack;
         int defense;
         int level;
@@ -118,6 +143,7 @@ class Enemy{
             enemy_name = EnemyName;
             char_class = CharacterClass;
             hp = Hp;
+            max_hp = Hp;
             attack = Attack;
             defense = Defense;
             level = getRNG(2, user_level);
@@ -125,7 +151,27 @@ class Enemy{
         }
         void show_details(){
             cout << "\n|| " << enemy_name << " || " << char_class << " || " << "Level " << level << " || " <<
-            "\n|| Health: " << hp << " || " << "Attack: " << attack << " || " << "Defense: " << defense << " || " << endl << endl; 
+            "\n|| Health: " << hp << " / " << max_hp << " || " << "Attack: " << attack << " || " << "Defense: " << defense << " || " << endl << endl; 
+        }
+        int get_enemy_hp(){
+            return hp;
+        }
+        int get_enemy_attack(){
+            return attack;
+        }
+        int get_enemy_defense(){
+            return defense;
+        }
+        void hp_reduce(int user_atk){
+            int actual_attack = (getRNG(5, user_atk-5)) - ((getRNG(3, 2) * 0.1) * defense);
+            cout << enemy_name << " received " << actual_attack << " damage!" << endl;
+            hp = hp - actual_attack;
+            if (hp < 0){
+                hp = 0;
+            }
+        }
+        void death(){
+            cout << enemy_name << " has been killed!" << endl;
         }
 };
 
@@ -153,12 +199,28 @@ Enemy enemy_creration(int user_level){
     Enemy enemy (names[getRNG(9, 0)], enemyClass.char_class, enemyClass.hp, enemyClass.attack, enemyClass.defense, user_level);
     return enemy;
 }
+void showBothDetails(Character c, Enemy e){
+    c.show_details();
+    e.show_details();
+}
+void battle_sequence(Character c, Enemy e){
+    while (c.get_user_hp() > 0 && e.get_enemy_hp() > 0){
+        showBothDetails(c, e);
+        c.hp_reduce(e.get_enemy_attack());
+        e.hp_reduce(c.get_user_attack());
+    }
+    showBothDetails(c, e);
+    if (c.get_user_hp() == 0){
+        c.death();
+    } else if (e.get_enemy_hp() == 0){
+        e.death();
+    }
+}
 
 // Main Function
 int main(){
     srand(time(NULL));
     Character myChar = character_creation_prompt();
     Enemy enemy = enemy_creration(myChar.get_user_level());
-    myChar.show_details();
-    enemy.show_details();
+    battle_sequence(myChar, enemy);
 }
