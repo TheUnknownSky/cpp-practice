@@ -4,16 +4,20 @@
 using namespace std;
 
 // Class/Function Declarations
-int getRNG(int range, int lowest_limit);
 class Templar;
 class Assassin;
 class Barbarian;
 class Char_Class;
 class Character;
 class Enemy;
+int getRNG(int range, int lowest_limit);
 Char_Class select_character();
 Character character_creation_prompt();
-Enemy enemy_creration();
+Enemy enemy_creration(int user_level);
+void attackCheck(int &attack);
+void showBothDetails(Character c, Enemy e);
+int battle_choice();
+void move(Character& c, Enemy& e, int choice, int first, int second, int third);
 void battle_sequence();
 
 // Class Definintions
@@ -72,32 +76,21 @@ class Character {
                 xp = xp - xp_limit; // Revert xp
                 level += 1; // Level up
                 xp_limit = xp_limit * 1.5; // Set XP Limit
-                max_hp = max_hp + (max_hp * (0.05 * (level - 1)));
+                max_hp = max_hp + (max_hp * (0.03 * (level - 1)));
                 hp = max_hp;
-                attack = attack + (attack * (0.05 * (level - 1)));
-                defense = defense + (defense * (0.05 * (level - 1)));
+                attack = attack + (attack * (0.03 * (level - 1)));
+                defense = defense + (defense * (0.03 * (level - 1)));
             }
             show_details();
         }
         void hp_reduce(int enemy_atk){
             int actual_attack = (getRNG(5, enemy_atk-5)) - ((getRNG(3, 2) * 0.1) * defense);
+            attackCheck(actual_attack);
             cout << username << " received " << actual_attack << " damage!" << endl;
             hp = hp - actual_attack;
             if (hp < 0){
                 hp = 0;
             }
-        }
-        int get_user_level(){
-            return level;
-        }
-        int get_user_hp(){
-            return hp;
-        }
-        int get_user_attack(){
-            return attack;
-        }
-        int get_user_defense(){
-            return defense;
         }
         void death(){
             cout << username << " has been killed!" << endl;
@@ -133,48 +126,40 @@ class Char_Class {
 };
 class Enemy{
     private:
-        int max_hp;
-        int level;
         string char_class;
     public:
-        string enemy_name;
+        string username;
+        int max_hp;
+        int level;
         int hp;
+        int xp;
         int attack;
         int defense;
-        int xp;
         Enemy(string EnemyName, string CharacterClass, int Hp, int Attack, int Defense, int user_level){
-            enemy_name = EnemyName;
+            username = EnemyName;
             char_class = CharacterClass;
             level = getRNG(2, user_level);
-            hp = Hp + (Hp * (0.07 * (level - 1)));
+            hp = Hp + (Hp * (0.1 * (level - 1)));
             max_hp = hp;
-            attack = Attack + (Attack * (0.07 * (level - 1)));
-            defense = Defense + (Defense * (0.07 * (level - 1)));
-            xp = getRNG((5 * (1.1 * level)), (5 * (1.1 * level)));
+            attack = Attack + (Attack * (0.1 * (level - 1)));
+            defense = Defense + (Defense * (0.1 * (level - 1)));
+            xp = getRNG((5 * (1.05 * level)), (5 * (1.05 * level)));
         }
         void show_details(){
-            cout << "\n|| " << enemy_name << " || " << char_class << " || " << "Level " << level << " || " <<
+            cout << "\n|| " << username << " || " << char_class << " || " << "Level " << level << " || " <<
             "\n|| Health: " << hp << " / " << max_hp << " || " << "Attack: " << attack << " || " << "Defense: " << defense << " || " << endl << endl; 
-        }
-        int get_enemy_hp(){
-            return hp;
-        }
-        int get_enemy_attack(){
-            return attack;
-        }
-        int get_enemy_defense(){
-            return defense;
         }
         void hp_reduce(int user_atk){
             int actual_attack = (getRNG(5, user_atk-5)) - ((getRNG(3, 2) * 0.1) * defense);
-            cout << endl << enemy_name << " received " << actual_attack << " damage!" << endl;
+            attackCheck(actual_attack);
+            cout << username << " received " << actual_attack << " damage!" << endl;
             hp = hp - actual_attack;
             if (hp < 0){
                 hp = 0;
             }
         }
         void death(){
-            cout << enemy_name << " has been killed!" << endl;
+            cout << username << " has been killed!" << endl;
         }
 };
 
@@ -202,6 +187,11 @@ Enemy enemy_creration(int user_level){
     Enemy enemy (names[getRNG(9, 0)], enemyClass.char_class, enemyClass.hp, enemyClass.attack, enemyClass.defense, user_level);
     return enemy;
 }
+void attackCheck(int &attack){
+    if (attack < 0){
+        attack = 0;
+    }
+}
 void showBothDetails(Character c, Enemy e){
     c.show_details();
     e.show_details();
@@ -215,33 +205,33 @@ void move(Character& c, Enemy& e, int choice, int first, int second, int third){
     int enemy_choice = getRNG(100, 1);
     if (choice == 1){
         if (enemy_choice >= 1 && enemy_choice <= (0 + first)){
-            cout << "\nBoth " << c.username << " and " << e.enemy_name << " attacked!" << endl;
+            cout << "\nBoth " << c.username << " and " << e.username << " attacked!" << endl;
             c.hp_reduce(e.attack);
             e.hp_reduce(c.attack);
         } else if (enemy_choice >= (first + 1) && enemy_choice <= (first + second)){
-            cout << endl << c.username << " attacked! " << e.enemy_name << " defended!" << endl;
-            e.hp_reduce(c.attack * 0.3);
+            cout << endl << c.username << " attacked! " << e.username << " defended!" << endl;
+            e.hp_reduce(c.attack * 0.5);
         } else if (enemy_choice >= (first + second + 1) && enemy_choice <= (first + second + third)){
-            cout << endl << e.enemy_name << " parried!" << endl;
+            cout << endl << e.username << " parried!" << endl;
             c.hp_reduce(e.attack * 1.5);
         }
     } else if (choice == 2){
         if (enemy_choice >= 1 && enemy_choice <= (0 + first)){
-            cout << endl << e.enemy_name << " attacked! " << c.username << " defended!" << endl;
-            c.hp_reduce(e.attack * 0.3);
+            cout << endl << e.username << " attacked! " << c.username << " defended!" << endl;
+            c.hp_reduce(e.attack * 0.5);
         } else if (enemy_choice >= (first + 1) && enemy_choice <= (first + second)){
-            cout << "\nBoth " << c.username << " and " << e.enemy_name << " defended! Nothing happened" << endl;
+            cout << "\nBoth " << c.username << " and " << e.username << " defended! Nothing happened" << endl;
         } else if (enemy_choice >= (first + second + 1) && enemy_choice <= (first + second + third)){
-            cout << endl << c.username << " defended! " << e.enemy_name << " parried! Nothing happened!" << endl;
+            cout << endl << c.username << " defended! " << e.username << " parried! Nothing happened!" << endl;
         }
     } else if (choice == 3){
         if (enemy_choice >= 1 && enemy_choice <= (0 + first)){
-            cout << endl << e.enemy_name << " attacked! " << c.username << " parried!" << endl;
+            cout << endl << e.username << " attacked! " << c.username << " parried!" << endl;
             e.hp_reduce(c.attack * 1.5);
         } else if (enemy_choice >= (first + 1) && enemy_choice <= (first + second)){
-            cout << endl << e.enemy_name << " defended! " << c.username << " parried! Nothing happened!" << endl;
+            cout << endl << e.username << " defended! " << c.username << " parried! Nothing happened!" << endl;
         } else if (enemy_choice >= (first + second + 1) && enemy_choice <= (first + second + third)){
-            cout << "\nBoth " << c.username << " and " << e.enemy_name << " parried! Nothing happened" << endl;
+            cout << "\nBoth " << c.username << " and " << e.username << " parried! Nothing happened" << endl;
         }
     }
 }
